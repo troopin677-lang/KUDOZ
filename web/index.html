@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUDOZ Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>KUDOZ CASINO</span>
+            </div>
+            <div class="balance">
+                <i class="fas fa-star"></i>
+                <span id="balance">100</span> ⭐
+            </div>
+        </header>
+
+        <!-- Меню -->
+        <nav class="menu">
+            <a href="index.html" class="menu-item active">
+                <i class="fas fa-home"></i>
+                <span>Главная</span>
+            </a>
+            <a href="roulette.html" class="menu-item">
+                <i class="fas fa-dice"></i>
+                <span>Рулетка</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-gift"></i>
+                <span>Кейсы</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-tasks"></i>
+                <span>Задания</span>
+            </a>
+        </nav>
+
+        <!-- Контент -->
+        <main class="main-content">
+            <div class="game-card roulette-card" onclick="location.href='roulette.html'">
+                <div class="game-icon">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <h3>РУЛЕТКА</h3>
+                <p>Классическая игра на удачу</p>
+                <div class="free-spin">
+                    <i class="fas fa-clock"></i>
+                    Бесплатно через: <span id="timer">23:59:44</span>
+                </div>
+            </div>
+
+            <div class="game-card cases-card">
+                <div class="game-icon">
+                    <i class="fas fa-box-open"></i>
+                </div>
+                <h3>КЕЙСЫ</h3>
+                <p>Открой и получи приз</p>
+                <div class="free-spin">
+                    <i class="fas fa-clock"></i>
+                    Бесплатно через: <span>00:00:00</span>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Рефералы</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-trophy"></i>
+                    <div>
+                        <div class="stat-value">100</div>
+                        <div class="stat-label">Место в топе</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Нижнее меню -->
+        <footer class="footer">
+            <div class="footer-text">
+                <i class="fab fa-telegram"></i>
+                @kudoz_bot
+            </div>
+            <button class="deposit-btn" onclick="deposit()">
+                <i class="fas fa-plus"></i> Пополнить
+            </button>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
