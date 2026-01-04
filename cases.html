@@ -1,5 +1,3 @@
-[file name]: cases.html
-[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -97,32 +95,19 @@
             cursor: not-allowed;
         }
         
-        .case-opening {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            min-height: 60px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
         }
         
-        .prize-display {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 40px;
-            border-radius: 30px;
-            text-align: center;
-            border: 5px solid gold;
-            max-width: 90%;
-        }
-        
-        .won-prize {
-            font-size: 32px;
-            margin: 20px 0;
-            color: #ffd700;
+        .back-btn {
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -185,22 +170,9 @@
                 <i class="fas fa-key"></i> ОТКРЫТЬ КЕЙС (50 ⭐)
             </button>
             
-            <div class="result" id="caseResult" style="min-height: 60px; padding: 20px; margin-top: 20px;">
+            <div class="result" id="caseResult">
                 Выберите кейс для открытия
             </div>
-        </div>
-    </div>
-    
-    <!-- Анимация открытия -->
-    <div class="case-opening" id="caseOpening">
-        <div class="prize-display">
-            <div id="spinningPrizes" style="font-size: 40px; margin: 20px;">
-                🎁 🎮 🎪 🎰 🎯 🎨
-            </div>
-            <div class="won-prize" id="wonPrize"></div>
-            <button onclick="closeCaseOpening()" style="padding: 10px 30px; margin-top: 20px;">
-                ЗАБРАТЬ ПРИЗ
-            </button>
         </div>
     </div>
 
@@ -276,11 +248,18 @@
             // Если не выбрали (на всякий случай)
             if (!wonPrize) wonPrize = prizes[0];
             
-            // Анимация открытия
-            showCaseOpening(wonPrize);
-            
-            // Добавляем в инвентарь если это подарок
-            if (wonPrize.type === 'gift') {
+            // Показываем результат
+            if (wonPrize.type === 'stars') {
+                document.getElementById('caseResult').innerHTML = 
+                    `<div style="color:#ffd700; font-size:24px; margin:10px 0;">🎉 ${wonPrize.amount} ⭐</div>
+                     <div>Вы выиграли звёзды!</div>`;
+                account.updateBalance(wonPrize.amount);
+            } else {
+                document.getElementById('caseResult').innerHTML = 
+                    `<div style="color:#00d2d3; font-size:24px; margin:10px 0;">🎁 ${wonPrize.name}</div>
+                     <div>Можно обменять на ${wonPrize.value} ⭐ в приложении</div>`;
+                
+                // Добавляем в инвентарь
                 const gift = {
                     id: Date.now(),
                     name: wonPrize.name,
@@ -289,50 +268,9 @@
                 };
                 account.addToInventory(gift);
             }
-        }
-        
-        function showCaseOpening(prize) {
-            const opening = document.getElementById('caseOpening');
-            const prizeDisplay = document.getElementById('wonPrize');
             
-            opening.style.display = 'flex';
-            
-            // Анимация кручения
-            let spins = 0;
-            const spinInterval = setInterval(() => {
-                const symbols = ['🎁', '🎮', '🎪', '🎰', '🎯', '🎨', '🃏', '👑'];
-                const randomSymbols = Array.from({length: 6}, () => 
-                    symbols[Math.floor(Math.random() * symbols.length)]
-                ).join(' ');
-                
-                document.getElementById('spinningPrizes').textContent = randomSymbols;
-                spins++;
-                
-                if (spins > 20) {
-                    clearInterval(spinInterval);
-                    
-                    // Показываем выигранный приз
-                    if (prize.type === 'stars') {
-                        prizeDisplay.innerHTML = `
-                            <div style="font-size: 48px;">${prize.amount} ⭐</div>
-                            <div style="font-size: 24px;">Вы выиграли звёзды!</div>
-                        `;
-                        // Добавляем звёзды
-                        window.kudoZAccount.updateBalance(prize.amount);
-                    } else {
-                        prizeDisplay.innerHTML = `
-                            <div style="font-size: 48px;">🎁</div>
-                            <div style="font-size: 24px;">${prize.name}</div>
-                            <div>Можно обменять на ${prize.value} ⭐</div>
-                        `;
-                    }
-                }
-            }, 100);
-        }
-        
-        function closeCaseOpening() {
-            document.getElementById('caseOpening').style.display = 'none';
-            location.reload(); // Обновляем баланс на странице
+            // Обновляем баланс на странице
+            document.getElementById('balance').textContent = account.getBalance();
         }
         
         // Инициализация
@@ -347,4 +285,3 @@
     </script>
 </body>
 </html>
-[file content end]
