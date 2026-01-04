@@ -1,5 +1,3 @@
-[file name]: roulette.html
-[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -20,10 +18,10 @@
             margin: 20px auto;
             border-radius: 50%;
             background: conic-gradient(
-                #008000 0deg 10deg,     /* Зеро - зеленый */
-                #ff0000 10deg 190deg,    /* Красные */
-                #000000 190deg 370deg,   /* Черные */
-                #008000 370deg 360deg    /* Закрываем круг */
+                #008000 0deg 10deg,
+                #ff0000 10deg 190deg,
+                #000000 190deg 370deg,
+                #008000 370deg 360deg
             );
             position: relative;
             overflow: hidden;
@@ -45,7 +43,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: rotate(calc(var(--i) * 9.729deg)); /* 360/37 = 9.729 */
+            transform: rotate(calc(var(--i) * 9.729deg));
         }
         
         .wheel-center {
@@ -72,7 +70,7 @@
         .bet-amount {
             font-size: 28px;
             margin: 10px 0;
-            color: var(--accent-gold);
+            color: #ffd700;
         }
         
         .bet-buttons {
@@ -153,6 +151,12 @@
             border-radius: 50%;
             cursor: pointer;
         }
+        
+        .back-btn {
+            color: white;
+            font-size: 20px;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -164,20 +168,17 @@
             <div class="logo">KUDOZ РУЛЕТКА</div>
             <div class="balance">
                 <i class="fas fa-star"></i>
-                <span id="balance">100</span> ⭐
+                <span id="balance">400</span> ⭐
             </div>
         </header>
 
         <div class="roulette-container">
             <h2>КРУТИ И ВЫИГРЫВАЙ!</h2>
             
-            <!-- Колесо рулетки -->
             <div class="roulette-wheel" id="rouletteWheel">
                 <div class="wheel-center"></div>
-                <!-- Числа будут добавлены через JS -->
             </div>
             
-            <!-- Управление ставкой -->
             <div class="bet-controls">
                 <div>СТАВКА:</div>
                 <div class="bet-amount" id="betAmount">10 ⭐</div>
@@ -201,12 +202,10 @@
                 <input type="range" min="10" max="1000" step="10" value="10" class="slider" id="betSlider" oninput="updateBetSlider(this.value)">
             </div>
             
-            <!-- Кнопка вращения -->
             <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
                 <i class="fas fa-play"></i> КРУТИТЬ (10 ⭐)
             </button>
             
-            <!-- Результат -->
             <div class="result" id="result">
                 Нажми "КРУТИТЬ" чтобы начать игру!
             </div>
@@ -216,21 +215,20 @@
     <script src="app.js"></script>
     <script>
         // Система аккаунта
-        class UserAccount {
+        class RouletteAccount {
             constructor() {
                 this.userId = localStorage.getItem('kudoz_user_id');
                 if (!this.userId) {
                     this.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                     localStorage.setItem('kudoz_user_id', this.userId);
                 }
-                
                 this.loadBalance();
             }
             
             loadBalance() {
                 let balance = localStorage.getItem(`kudoz_balance_${this.userId}`);
                 if (!balance) {
-                    balance = 100;
+                    balance = 400;
                     this.saveBalance(balance);
                 }
                 return parseInt(balance);
@@ -238,10 +236,7 @@
             
             saveBalance(balance) {
                 localStorage.setItem(`kudoz_balance_${this.userId}`, balance);
-                // Обновляем на всех страницах
-                document.querySelectorAll('#balance').forEach(el => {
-                    el.textContent = balance;
-                });
+                document.getElementById('balance').textContent = balance;
             }
             
             updateBalance(change) {
@@ -252,18 +247,21 @@
             }
         }
         
-        // Инициализация рулетки
-        const account = new UserAccount();
+        // Инициализация
+        const account = new RouletteAccount();
         const wheel = document.getElementById('rouletteWheel');
         const spinBtn = document.getElementById('spinBtn');
         const resultDiv = document.getElementById('result');
         
-        // Правильные числа рулетки (европейская)
+        // Правильные числа рулетки
         const numbers = [
             '0', '32', '15', '19', '4', '21', '2', '25', '17', '34', '6', '27', '13', '36', 
             '11', '30', '8', '23', '10', '5', '24', '16', '33', '1', '20', '14', '31', '9', 
             '22', '18', '29', '7', '28', '12', '35', '3', '26'
         ];
+        
+        // Красные числа в рулетке
+        const redNumbers = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
         
         // Создаем числа на рулетке
         numbers.forEach((num, index) => {
@@ -272,18 +270,12 @@
             el.textContent = num;
             el.style.setProperty('--i', index);
             
-            // Правильные цвета для рулетки
             if (num === '0') {
                 el.style.color = 'white';
-                el.style.textShadow = '0 0 3px black';
-            } else if ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(parseInt(num))) {
-                // Красные числа
+            } else if (redNumbers.includes(parseInt(num))) {
                 el.style.color = 'white';
-                el.style.textShadow = '0 0 3px black';
             } else {
-                // Черные числа
                 el.style.color = 'white';
-                el.style.textShadow = '0 0 3px black';
             }
             
             wheel.appendChild(el);
@@ -292,13 +284,14 @@
         let currentBet = 10;
         let isSpinning = false;
         
+        // Устанавливаем начальный баланс
+        document.getElementById('balance').textContent = account.loadBalance();
+        
         function setBet(amount) {
             if (isSpinning) return;
             currentBet = amount;
             document.getElementById('betAmount').textContent = amount + ' ⭐';
             document.getElementById('betSlider').value = amount;
-            
-            // Обновляем кнопку
             spinBtn.innerHTML = `<i class="fas fa-play"></i> КРУТИТЬ (${amount} ⭐)`;
         }
         
@@ -322,7 +315,7 @@
                 return;
             }
             
-            // Вычитаем ставку СРАЗУ
+            // Вычитаем ставку
             account.updateBalance(-currentBet);
             
             // Блокируем кнопки
@@ -330,44 +323,65 @@
             spinBtn.disabled = true;
             spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> КРУТИТСЯ...';
             
-            // Сильно уменьшаем шанс на выигрыш
+            // РЕАЛЬНЫЕ ШАНСЫ (90% проигрыш)
             const rand = Math.random();
             let winNumber, winAmount = 0;
             
-            // 90% проигрыш, 9% маленький выигрыш, 1% большой выигрыш
-            if (rand < 0.90) {
-                // Проигрыш - выбираем противоположный цвет
-                const loseNumbers = numbers.filter((num, idx) => {
-                    if (num === '0') return false;
-                    const numInt = parseInt(num);
-                    // Выбираем числа противоположного цвета
-                    if (Math.random() > 0.5) {
-                        return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
-                    } else {
-                        return ![1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+            if (rand < 0.90) { // 90% - проигрыш
+                // Выбираем проигрышное число
+                const loseType = Math.random();
+                if (loseType < 0.33) {
+                    // Выбираем ноль (мало шансов)
+                    winNumber = '0';
+                } else if (loseType < 0.66) {
+                    // Выбираем число противоположного цвета
+                    const betIsRed = Math.random() > 0.5;
+                    const availableNumbers = numbers.filter(num => {
+                        if (num === '0') return false;
+                        const numInt = parseInt(num);
+                        if (betIsRed) {
+                            return !redNumbers.includes(numInt); // Черное если ставил на красное
+                        } else {
+                            return redNumbers.includes(numInt); // Красное если ставил на черное
+                        }
+                    });
+                    winNumber = availableNumbers[Math.floor(Math.random() * availableNumbers.length)];
+                } else {
+                    // Любое другое число
+                    winNumber = numbers[Math.floor(Math.random() * numbers.length)];
+                    if (winNumber !== '0') {
+                        const numInt = parseInt(winNumber);
+                        // Делаем так чтобы не выиграл
+                        winAmount = 0;
                     }
-                });
-                winNumber = loseNumbers[Math.floor(Math.random() * loseNumbers.length)];
+                }
             } 
-            else if (rand < 0.99) {
-                // Маленький выигрыш x2
+            else if (rand < 0.98) { // 8% - маленький выигрыш x2
                 const color = Math.random() > 0.5 ? 'red' : 'black';
                 const colorNumbers = numbers.filter(num => {
                     if (num === '0') return false;
                     const numInt = parseInt(num);
                     if (color === 'red') {
-                        return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                        return redNumbers.includes(numInt);
                     } else {
-                        return ![1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                        return !redNumbers.includes(numInt);
                     }
                 });
                 winNumber = colorNumbers[Math.floor(Math.random() * colorNumbers.length)];
                 winAmount = currentBet * 2;
             }
-            else {
-                // Большой выигрыш x35 (зеро)
-                winNumber = '0';
-                winAmount = currentBet * 35;
+            else { // 2% - большой выигрыш
+                if (Math.random() < 0.3) {
+                    winNumber = '0';
+                    winAmount = currentBet * 35;
+                } else {
+                    // Выигрыш x5
+                    winNumber = numbers[Math.floor(Math.random() * numbers.length)];
+                    while (winNumber === '0') {
+                        winNumber = numbers[Math.floor(Math.random() * numbers.length)];
+                    }
+                    winAmount = currentBet * 5;
+                }
             }
             
             const winIndex = numbers.indexOf(winNumber);
@@ -379,7 +393,7 @@
             wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)';
             wheel.style.transform = `rotate(${degrees}deg)`;
             
-            // Показываем результат через 4 секунды
+            // Результат через 4 секунды
             setTimeout(() => {
                 let resultText = '';
                 
@@ -392,10 +406,11 @@
                     `;
                     account.updateBalance(winAmount);
                 } else {
-                    const color = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(parseInt(winNumber)) ? 'красное' : 'чёрное';
+                    const isRed = redNumbers.includes(parseInt(winNumber));
+                    const color = isRed ? 'красное' : 'чёрное';
                     resultText = `
                         <div style="color:#${winAmount > currentBet * 5 ? 'ffd700' : '00d2d3'}; font-size:20px; margin:10px 0;">
-                            ${color === 'красное' ? '🔴' : '⚫'} ${winNumber}
+                            ${isRed ? '🔴' : '⚫'} ${winNumber}
                         </div>
                         <div>Вы выиграли ${winAmount} ⭐!</div>
                     `;
@@ -404,7 +419,7 @@
                 
                 resultDiv.innerHTML = resultText;
                 
-                // Разблокируем кнопки
+                // Разблокируем
                 isSpinning = false;
                 spinBtn.disabled = false;
                 spinBtn.innerHTML = `<i class="fas fa-play"></i> КРУТИТЬ (${currentBet} ⭐)`;
@@ -412,12 +427,7 @@
         }
         
         // Инициализация
-        document.addEventListener('DOMContentLoaded', function() {
-            // Устанавливаем начальный баланс
-            document.getElementById('balance').textContent = account.loadBalance();
-            setBet(10);
-        });
+        setBet(10);
     </script>
 </body>
 </html>
-[file content end]
