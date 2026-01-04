@@ -1,5 +1,3 @@
-[file name]: app.js
-[file content begin]
 // Система аккаунтов и баланса
 class KudoZAccount {
     constructor() {
@@ -70,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateTimer() {
         const timerElement = document.getElementById('timer');
         if (timerElement) {
-            // Просто пример таймера
             const now = new Date();
             const nextFree = new Date(now);
             nextFree.setHours(now.getHours() + 1, 0, 0, 0);
@@ -97,15 +94,4 @@ document.addEventListener('DOMContentLoaded', function() {
         
         alert(`✅ 100 звёзд добавлено! Новый баланс: ${newBalance} ⭐`);
     };
-    
-    // Обработка ссылок на кейсы
-    document.querySelectorAll('a[href="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (this.querySelector('.fa-gift')) {
-                e.preventDefault();
-                alert('🚧 Система кейсов в разработке! Скоро появится кручение Telegram-подарков!');
-            }
-        });
-    });
 });
-[file content end]
