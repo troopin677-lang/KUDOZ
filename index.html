@@ -35,7 +35,7 @@
                 <i class="fas fa-gift"></i>
                 <span>Кейсы</span>
             </a>
-            <a href="#" class="menu-item" onclick="alert('🚧 Задания в разработке!')">
+            <a href="#" class="menu-item" onclick="alert('Задания в разработке!')">
                 <i class="fas fa-tasks"></i>
                 <span>Задания</span>
             </a>
@@ -99,7 +99,6 @@
 
     <script src="app.js"></script>
     <script>
-        // Показываем ID пользователя
         document.addEventListener('DOMContentLoaded', function() {
             const userId = localStorage.getItem('kudoz_user_id');
             if (userId) {
@@ -107,7 +106,6 @@
                 document.getElementById('userCode').textContent = shortId;
             }
             
-            // Показываем количество подарков
             const inventory = JSON.parse(localStorage.getItem(`kudoz_inventory_${userId}`) || '[]');
             document.getElementById('giftCount').textContent = inventory.length;
         });
