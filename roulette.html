@@ -1,3 +1,5 @@
+[file name]: roulette.html
+[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -17,11 +19,16 @@
             height: 300px;
             margin: 20px auto;
             border-radius: 50%;
-            background: linear-gradient(45deg, #ff0000, #0000ff);
+            background: conic-gradient(
+                #008000 0deg 10deg,     /* Зеро - зеленый */
+                #ff0000 10deg 190deg,    /* Красные */
+                #000000 190deg 370deg,   /* Черные */
+                #008000 370deg 360deg    /* Закрываем круг */
+            );
             position: relative;
             overflow: hidden;
             border: 10px solid #333;
-            transition: transform 5s cubic-bezier(0.1, 0.7, 0.1, 1);
+            transition: transform 4s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         
         .roulette-number {
@@ -34,10 +41,24 @@
             text-align: center;
             color: white;
             font-weight: bold;
+            font-size: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transform: rotate(calc(var(--i) * 18deg));
+            transform: rotate(calc(var(--i) * 9.729deg)); /* 360/37 = 9.729 */
+        }
+        
+        .wheel-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            border: 5px solid #333;
         }
         
         .bet-controls {
@@ -49,8 +70,9 @@
         }
         
         .bet-amount {
-            font-size: 24px;
+            font-size: 28px;
             margin: 10px 0;
+            color: var(--accent-gold);
         }
         
         .bet-buttons {
@@ -61,33 +83,75 @@
         }
         
         .bet-btn {
-            padding: 10px;
+            padding: 12px;
             background: #444;
             border: none;
             color: white;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        .bet-btn:hover {
+            background: #555;
         }
         
         .bet-btn.active {
             background: #007acc;
+            transform: scale(1.05);
         }
         
         .spin-btn {
-            padding: 15px 40px;
+            padding: 18px 50px;
             background: linear-gradient(45deg, #ff0000, #ff8800);
             color: white;
             border: none;
-            border-radius: 25px;
-            font-size: 20px;
+            border-radius: 30px;
+            font-size: 22px;
+            font-weight: bold;
             cursor: pointer;
-            margin: 10px;
+            margin: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+        
+        .spin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .spin-btn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
         }
         
         .result {
             margin-top: 20px;
             font-size: 18px;
-            min-height: 50px;
+            min-height: 60px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+        
+        .slider {
+            width: 100%;
+            margin: 15px 0;
+            -webkit-appearance: none;
+            height: 10px;
+            background: #444;
+            border-radius: 5px;
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #007acc;
+            border-radius: 50%;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -109,6 +173,7 @@
             
             <!-- Колесо рулетки -->
             <div class="roulette-wheel" id="rouletteWheel">
+                <div class="wheel-center"></div>
                 <!-- Числа будут добавлены через JS -->
             </div>
             
@@ -126,17 +191,18 @@
                     <button class="bet-btn" onclick="setBet(1000)">1000</button>
                 </div>
                 
-                <div>
+                <div style="display: flex; gap: 10px; margin: 10px 0; justify-content: center;">
                     <button class="bet-btn" onclick="changeBet(-10)">-10</button>
                     <button class="bet-btn" onclick="changeBet(-100)">-100</button>
-                    <input type="range" min="10" max="1000" value="10" class="slider" id="betSlider" oninput="updateBetSlider(this.value)">
                     <button class="bet-btn" onclick="changeBet(10)">+10</button>
                     <button class="bet-btn" onclick="changeBet(100)">+100</button>
                 </div>
+                
+                <input type="range" min="10" max="1000" step="10" value="10" class="slider" id="betSlider" oninput="updateBetSlider(this.value)">
             </div>
             
             <!-- Кнопка вращения -->
-            <button class="spin-btn" onclick="spinRoulette()">
+            <button class="spin-btn" id="spinBtn" onclick="spinRoulette()">
                 <i class="fas fa-play"></i> КРУТИТЬ (10 ⭐)
             </button>
             
@@ -149,19 +215,77 @@
 
     <script src="app.js"></script>
     <script>
+        // Система аккаунта
+        class UserAccount {
+            constructor() {
+                this.userId = localStorage.getItem('kudoz_user_id');
+                if (!this.userId) {
+                    this.userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('kudoz_user_id', this.userId);
+                }
+                
+                this.loadBalance();
+            }
+            
+            loadBalance() {
+                let balance = localStorage.getItem(`kudoz_balance_${this.userId}`);
+                if (!balance) {
+                    balance = 100;
+                    this.saveBalance(balance);
+                }
+                return parseInt(balance);
+            }
+            
+            saveBalance(balance) {
+                localStorage.setItem(`kudoz_balance_${this.userId}`, balance);
+                // Обновляем на всех страницах
+                document.querySelectorAll('#balance').forEach(el => {
+                    el.textContent = balance;
+                });
+            }
+            
+            updateBalance(change) {
+                const current = this.loadBalance();
+                const newBalance = current + change;
+                this.saveBalance(newBalance);
+                return newBalance;
+            }
+        }
+        
         // Инициализация рулетки
+        const account = new UserAccount();
         const wheel = document.getElementById('rouletteWheel');
-        const numbers = ['0', '32', '15', '19', '4', '21', '2', '25', '17', '34', '6', '27', '13', '36', '11', '30', '8', '23', '10', '5', '24', '16', '33', '1', '20', '14', '31', '9', '22', '18', '29', '7', '28', '12', '35', '3', '26'];
+        const spinBtn = document.getElementById('spinBtn');
+        const resultDiv = document.getElementById('result');
+        
+        // Правильные числа рулетки (европейская)
+        const numbers = [
+            '0', '32', '15', '19', '4', '21', '2', '25', '17', '34', '6', '27', '13', '36', 
+            '11', '30', '8', '23', '10', '5', '24', '16', '33', '1', '20', '14', '31', '9', 
+            '22', '18', '29', '7', '28', '12', '35', '3', '26'
+        ];
         
         // Создаем числа на рулетке
         numbers.forEach((num, index) => {
-            const angle = (360 / numbers.length) * index;
             const el = document.createElement('div');
             el.className = 'roulette-number';
             el.textContent = num;
             el.style.setProperty('--i', index);
-            el.style.color = (num === '0') ? 'green' : (index % 2 === 0) ? 'red' : 'black';
-            el.style.backgroundColor = (num === '0') ? 'green' : (index % 2 === 0) ? 'darkred' : 'lightgray';
+            
+            // Правильные цвета для рулетки
+            if (num === '0') {
+                el.style.color = 'white';
+                el.style.textShadow = '0 0 3px black';
+            } else if ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(parseInt(num))) {
+                // Красные числа
+                el.style.color = 'white';
+                el.style.textShadow = '0 0 3px black';
+            } else {
+                // Черные числа
+                el.style.color = 'white';
+                el.style.textShadow = '0 0 3px black';
+            }
+            
             wheel.appendChild(el);
         });
         
@@ -175,7 +299,7 @@
             document.getElementById('betSlider').value = amount;
             
             // Обновляем кнопку
-            document.querySelector('.spin-btn').innerHTML = `<i class="fas fa-play"></i> КРУТИТЬ (${amount} ⭐)`;
+            spinBtn.innerHTML = `<i class="fas fa-play"></i> КРУТИТЬ (${amount} ⭐)`;
         }
         
         function changeBet(delta) {
@@ -192,62 +316,108 @@
         function spinRoulette() {
             if (isSpinning) return;
             
-            const balance = parseInt(document.getElementById('balance').textContent);
+            const balance = account.loadBalance();
             if (balance < currentBet) {
-                document.getElementById('result').innerHTML = '❌ Недостаточно звёзд!';
+                resultDiv.innerHTML = '<div style="color:#ff4757;">❌ Недостаточно звёзд!</div>';
                 return;
             }
             
-            // Вычитаем ставку
-            document.getElementById('balance').textContent = balance - currentBet;
+            // Вычитаем ставку СРАЗУ
+            account.updateBalance(-currentBet);
             
             // Блокируем кнопки
             isSpinning = true;
+            spinBtn.disabled = true;
+            spinBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> КРУТИТСЯ...';
             
-            // Случайное число
-            const winNumber = numbers[Math.floor(Math.random() * numbers.length)];
-            const winColor = (winNumber === '0') ? 'green' : (numbers.indexOf(winNumber) % 2 === 0) ? 'red' : 'black';
+            // Сильно уменьшаем шанс на выигрыш
+            const rand = Math.random();
+            let winNumber, winAmount = 0;
+            
+            // 90% проигрыш, 9% маленький выигрыш, 1% большой выигрыш
+            if (rand < 0.90) {
+                // Проигрыш - выбираем противоположный цвет
+                const loseNumbers = numbers.filter((num, idx) => {
+                    if (num === '0') return false;
+                    const numInt = parseInt(num);
+                    // Выбираем числа противоположного цвета
+                    if (Math.random() > 0.5) {
+                        return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                    } else {
+                        return ![1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                    }
+                });
+                winNumber = loseNumbers[Math.floor(Math.random() * loseNumbers.length)];
+            } 
+            else if (rand < 0.99) {
+                // Маленький выигрыш x2
+                const color = Math.random() > 0.5 ? 'red' : 'black';
+                const colorNumbers = numbers.filter(num => {
+                    if (num === '0') return false;
+                    const numInt = parseInt(num);
+                    if (color === 'red') {
+                        return [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                    } else {
+                        return ![1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(numInt);
+                    }
+                });
+                winNumber = colorNumbers[Math.floor(Math.random() * colorNumbers.length)];
+                winAmount = currentBet * 2;
+            }
+            else {
+                // Большой выигрыш x35 (зеро)
+                winNumber = '0';
+                winAmount = currentBet * 35;
+            }
+            
+            const winIndex = numbers.indexOf(winNumber);
             
             // Анимация вращения
-            const spins = 5 + Math.random() * 3; // 5-8 оборотов
-            const degrees = spins * 360 + (numbers.indexOf(winNumber) * (360 / numbers.length));
+            const spins = 5 + Math.random() * 3;
+            const degrees = spins * 360 + (winIndex * (360 / numbers.length));
             
+            wheel.style.transition = 'transform 4s cubic-bezier(0.2, 0.8, 0.2, 1)';
             wheel.style.transform = `rotate(${degrees}deg)`;
             
-            // Показываем результат через 5 секунд
+            // Показываем результат через 4 секунды
             setTimeout(() => {
-                let winAmount = 0;
                 let resultText = '';
                 
-                // Логика выигрыша
-                if (winNumber === '0') {
-                    winAmount = currentBet * 35; // Зеро x35
-                    resultText = `🎉 ЗЕРО! Вы выиграли ${winAmount} ⭐`;
-                } else if (winColor === 'red') {
-                    winAmount = currentBet * 2; // Красное x2
-                    resultText = `🔴 КРАСНОЕ! Вы выиграли ${winAmount} ⭐`;
+                if (winAmount === 0) {
+                    resultText = `<div style="color:#ff4757;">⚫ Выпало ${winNumber} - Проигрыш ${currentBet} ⭐</div>`;
+                } else if (winNumber === '0') {
+                    resultText = `
+                        <div style="color:#00d2d3; font-size:24px; margin:10px 0;">🎉 ЗЕРО! ${winNumber}</div>
+                        <div>Вы выиграли ${winAmount} ⭐!</div>
+                    `;
+                    account.updateBalance(winAmount);
                 } else {
-                    resultText = `⚫ ЧЕРНОЕ! Вы проиграли ${currentBet} ⭐`;
+                    const color = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(parseInt(winNumber)) ? 'красное' : 'чёрное';
+                    resultText = `
+                        <div style="color:#${winAmount > currentBet * 5 ? 'ffd700' : '00d2d3'}; font-size:20px; margin:10px 0;">
+                            ${color === 'красное' ? '🔴' : '⚫'} ${winNumber}
+                        </div>
+                        <div>Вы выиграли ${winAmount} ⭐!</div>
+                    `;
+                    account.updateBalance(winAmount);
                 }
                 
-                // Обновляем баланс
-                if (winAmount > 0) {
-                    const newBalance = parseInt(document.getElementById('balance').textContent) + winAmount;
-                    document.getElementById('balance').textContent = newBalance;
-                }
+                resultDiv.innerHTML = resultText;
                 
-                document.getElementById('result').innerHTML = `
-                    <div style="font-size:24px;margin:10px 0;">🎰 <b>${winNumber}</b></div>
-                    <div>${resultText}</div>
-                `;
-                
-                // Разблокируем
+                // Разблокируем кнопки
                 isSpinning = false;
-            }, 5000);
+                spinBtn.disabled = false;
+                spinBtn.innerHTML = `<i class="fas fa-play"></i> КРУТИТЬ (${currentBet} ⭐)`;
+            }, 4000);
         }
         
         // Инициализация
-        setBet(10);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Устанавливаем начальный баланс
+            document.getElementById('balance').textContent = account.loadBalance();
+            setBet(10);
+        });
     </script>
 </body>
 </html>
+[file content end]
