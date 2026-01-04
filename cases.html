@@ -1,0 +1,350 @@
+[file name]: cases.html
+[file content begin]
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUDOZ - Кейсы</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .cases-container {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .case-item {
+            background: linear-gradient(135deg, #2b2b5e, #3a3a7e);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px auto;
+            max-width: 400px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .case-item:hover {
+            transform: translateY(-5px);
+            border-color: #ffd700;
+            box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+        }
+        
+        .case-item.premium {
+            background: linear-gradient(135deg, #ff8c00, #ffd700);
+        }
+        
+        .case-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+        
+        .case-item.premium .case-icon {
+            color: white;
+        }
+        
+        .case-price {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        
+        .prizes-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+        }
+        
+        .prize-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+        
+        .open-case-btn {
+            padding: 15px 40px;
+            background: linear-gradient(45deg, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .open-case-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .open-case-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .case-opening {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .prize-display {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            border: 5px solid gold;
+            max-width: 90%;
+        }
+        
+        .won-prize {
+            font-size: 32px;
+            margin: 20px 0;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="logo">KUDOZ КЕЙСЫ</div>
+            <div class="balance">
+                <i class="fas fa-star"></i>
+                <span id="balance">400</span> ⭐
+            </div>
+        </header>
+
+        <div class="cases-container">
+            <h2>🎁 ОТКРЫВАЙ КЕЙСЫ!</h2>
+            <p style="color: #aaa; margin-bottom: 20px;">
+                Крутятся Telegram-подарки! Мини-подарки можно обменять на звёзды
+            </p>
+            
+            <!-- Базовый кейс -->
+            <div class="case-item" onclick="selectCase('basic')">
+                <div class="case-icon">
+                    <i class="fas fa-box"></i>
+                </div>
+                <h3>БАЗОВЫЙ КЕЙС</h3>
+                <p>Шанс получить Telegram-подарки</p>
+                
+                <div class="prizes-list">
+                    <div class="prize-item">Pepe игрушка</div>
+                    <div class="prize-item">5-15 ⭐</div>
+                    <div class="prize-item">Стикеры</div>
+                    <div class="prize-item">Mini-подарок</div>
+                </div>
+                
+                <div class="case-price">50 ⭐</div>
+            </div>
+            
+            <!-- Премиум кейс -->
+            <div class="case-item premium" onclick="selectCase('premium')">
+                <div class="case-icon">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3>ПРЕМИУМ КЕЙС</h3>
+                <p>Большие Telegram-подарки и бонусы</p>
+                
+                <div class="prizes-list">
+                    <div class="prize-item">Plush Pepe</div>
+                    <div class="prize-item">50-200 ⭐</div>
+                    <div class="prize-item">Редкий подарок</div>
+                    <div class="prize-item">Бонус x2</div>
+                </div>
+                
+                <div class="case-price">200 ⭐</div>
+            </div>
+            
+            <button class="open-case-btn" id="openCaseBtn" onclick="openCase()">
+                <i class="fas fa-key"></i> ОТКРЫТЬ КЕЙС (50 ⭐)
+            </button>
+            
+            <div class="result" id="caseResult" style="min-height: 60px; padding: 20px; margin-top: 20px;">
+                Выберите кейс для открытия
+            </div>
+        </div>
+    </div>
+    
+    <!-- Анимация открытия -->
+    <div class="case-opening" id="caseOpening">
+        <div class="prize-display">
+            <div id="spinningPrizes" style="font-size: 40px; margin: 20px;">
+                🎁 🎮 🎪 🎰 🎯 🎨
+            </div>
+            <div class="won-prize" id="wonPrize"></div>
+            <button onclick="closeCaseOpening()" style="padding: 10px 30px; margin-top: 20px;">
+                ЗАБРАТЬ ПРИЗ
+            </button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        let selectedCase = 'basic';
+        const casePrices = {
+            'basic': 50,
+            'premium': 200
+        };
+        
+        const casePrizes = {
+            'basic': [
+                { type: 'stars', amount: 5, chance: 40 },
+                { type: 'stars', amount: 10, chance: 30 },
+                { type: 'stars', amount: 15, chance: 15 },
+                { type: 'gift', name: 'Mini Pepe', value: 20, chance: 10 },
+                { type: 'gift', name: 'Telegram Стикеры', value: 30, chance: 5 }
+            ],
+            'premium': [
+                { type: 'stars', amount: 50, chance: 35 },
+                { type: 'stars', amount: 100, chance: 25 },
+                { type: 'stars', amount: 200, chance: 10 },
+                { type: 'gift', name: 'Plush Pepe', value: 300, chance: 5 },
+                { type: 'gift', name: 'Редкий подарок', value: 150, chance: 25 }
+            ]
+        };
+        
+        function selectCase(caseType) {
+            selectedCase = caseType;
+            const price = casePrices[caseType];
+            document.getElementById('openCaseBtn').innerHTML = 
+                `<i class="fas fa-key"></i> ОТКРЫТЬ КЕЙС (${price} ⭐)`;
+            
+            // Подсветка выбранного
+            document.querySelectorAll('.case-item').forEach(item => {
+                item.style.borderColor = 'transparent';
+            });
+            event.currentTarget.style.borderColor = '#ffd700';
+            
+            document.getElementById('caseResult').innerHTML = 
+                `Выбран: <b>${caseType === 'basic' ? 'Базовый' : 'Премиум'}</b> кейс за ${price} ⭐`;
+        }
+        
+        function openCase() {
+            const account = window.kudoZAccount;
+            const price = casePrices[selectedCase];
+            const balance = account.getBalance();
+            
+            if (balance < price) {
+                document.getElementById('caseResult').innerHTML = 
+                    '<div style="color:#ff4757;">❌ Недостаточно звёзд!</div>';
+                return;
+            }
+            
+            // Снимаем стоимость
+            account.updateBalance(-price);
+            
+            // Выбираем приз по вероятности
+            const prizes = casePrizes[selectedCase];
+            const rand = Math.random() * 100;
+            let cumulative = 0;
+            let wonPrize = null;
+            
+            for (const prize of prizes) {
+                cumulative += prize.chance;
+                if (rand <= cumulative) {
+                    wonPrize = prize;
+                    break;
+                }
+            }
+            
+            // Если не выбрали (на всякий случай)
+            if (!wonPrize) wonPrize = prizes[0];
+            
+            // Анимация открытия
+            showCaseOpening(wonPrize);
+            
+            // Добавляем в инвентарь если это подарок
+            if (wonPrize.type === 'gift') {
+                const gift = {
+                    id: Date.now(),
+                    name: wonPrize.name,
+                    value: wonPrize.value,
+                    date: new Date().toLocaleDateString()
+                };
+                account.addToInventory(gift);
+            }
+        }
+        
+        function showCaseOpening(prize) {
+            const opening = document.getElementById('caseOpening');
+            const prizeDisplay = document.getElementById('wonPrize');
+            
+            opening.style.display = 'flex';
+            
+            // Анимация кручения
+            let spins = 0;
+            const spinInterval = setInterval(() => {
+                const symbols = ['🎁', '🎮', '🎪', '🎰', '🎯', '🎨', '🃏', '👑'];
+                const randomSymbols = Array.from({length: 6}, () => 
+                    symbols[Math.floor(Math.random() * symbols.length)]
+                ).join(' ');
+                
+                document.getElementById('spinningPrizes').textContent = randomSymbols;
+                spins++;
+                
+                if (spins > 20) {
+                    clearInterval(spinInterval);
+                    
+                    // Показываем выигранный приз
+                    if (prize.type === 'stars') {
+                        prizeDisplay.innerHTML = `
+                            <div style="font-size: 48px;">${prize.amount} ⭐</div>
+                            <div style="font-size: 24px;">Вы выиграли звёзды!</div>
+                        `;
+                        // Добавляем звёзды
+                        window.kudoZAccount.updateBalance(prize.amount);
+                    } else {
+                        prizeDisplay.innerHTML = `
+                            <div style="font-size: 48px;">🎁</div>
+                            <div style="font-size: 24px;">${prize.name}</div>
+                            <div>Можно обменять на ${prize.value} ⭐</div>
+                        `;
+                    }
+                }
+            }, 100);
+        }
+        
+        function closeCaseOpening() {
+            document.getElementById('caseOpening').style.display = 'none';
+            location.reload(); // Обновляем баланс на странице
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            // Выбираем первый кейс по умолчанию
+            selectCase('basic');
+            
+            // Загружаем баланс
+            const account = window.kudoZAccount;
+            document.getElementById('balance').textContent = account.getBalance();
+        });
+    </script>
+</body>
+</html>
+[file content end]
