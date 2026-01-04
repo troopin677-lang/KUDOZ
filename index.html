@@ -1,3 +1,5 @@
+[file name]: index.html
+[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -17,7 +19,7 @@
             </div>
             <div class="balance">
                 <i class="fas fa-star"></i>
-                <span id="balance">100</span> ⭐
+                <span id="balance">400</span> ⭐
             </div>
         </header>
 
@@ -31,11 +33,11 @@
                 <i class="fas fa-dice"></i>
                 <span>Рулетка</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="#" class="menu-item" onclick="alert('🚧 Кейсы скоро! Будут крутиться Telegram-подарки!')">
                 <i class="fas fa-gift"></i>
                 <span>Кейсы</span>
             </a>
-            <a href="#" class="menu-item">
+            <a href="#" class="menu-item" onclick="alert('🚧 Задания в разработке!')">
                 <i class="fas fa-tasks"></i>
                 <span>Задания</span>
             </a>
@@ -48,38 +50,38 @@
                     <i class="fas fa-dice"></i>
                 </div>
                 <h3>РУЛЕТКА</h3>
-                <p>Классическая игра на удачу</p>
+                <p>Исправлено! Баланс сохраняется</p>
                 <div class="free-spin">
                     <i class="fas fa-clock"></i>
-                    Бесплатно через: <span id="timer">23:59:44</span>
+                    Бесплатно через: <span id="timer">00:59:59</span>
                 </div>
             </div>
 
-            <div class="game-card cases-card">
+            <div class="game-card cases-card" onclick="alert('🚧 Кейсы в разработке!\nБудут крутиться:\n• Pepe игрушки\n• Telegram подарки\n• Виртуальные призы')">
                 <div class="game-icon">
                     <i class="fas fa-box-open"></i>
                 </div>
                 <h3>КЕЙСЫ</h3>
-                <p>Открой и получи приз</p>
+                <p>Telegram-подарки</p>
                 <div class="free-spin">
                     <i class="fas fa-clock"></i>
-                    Бесплатно через: <span>00:00:00</span>
+                    Скоро доступно
                 </div>
             </div>
 
             <div class="stats">
                 <div class="stat-item">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-user"></i>
                     <div>
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Рефералы</div>
+                        <div class="stat-value" id="userCode">---</div>
+                        <div class="stat-label">Ваш ID</div>
                     </div>
                 </div>
                 <div class="stat-item">
-                    <i class="fas fa-trophy"></i>
+                    <i class="fas fa-gift"></i>
                     <div>
-                        <div class="stat-value">100</div>
-                        <div class="stat-label">Место в топе</div>
+                        <div class="stat-value" id="giftCount">0</div>
+                        <div class="stat-label">Подарки</div>
                     </div>
                 </div>
             </div>
@@ -92,11 +94,26 @@
                 @kudoz_bot
             </div>
             <button class="deposit-btn" onclick="deposit()">
-                <i class="fas fa-plus"></i> Пополнить
+                <i class="fas fa-plus"></i> +100 ⭐
             </button>
         </footer>
     </div>
 
     <script src="app.js"></script>
+    <script>
+        // Показываем ID пользователя
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('kudoz_user_id');
+            if (userId) {
+                const shortId = userId.split('_')[1]?.substr(-4) || 'USER';
+                document.getElementById('userCode').textContent = shortId;
+            }
+            
+            // Показываем количество подарков
+            const inventory = JSON.parse(localStorage.getItem(`kudoz_inventory_${userId}`) || '[]');
+            document.getElementById('giftCount').textContent = inventory.length;
+        });
+    </script>
 </body>
 </html>
+[file content end]
