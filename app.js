@@ -1,15 +1,21 @@
+// Система аккаунтов и баланса
 class KudoZAccount {
     constructor() {
         this.initUser();
     }
     
     initUser() {
+        // Генерируем ID пользователя если нет
         let userId = localStorage.getItem('kudoz_user_id');
         if (!userId) {
             userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             localStorage.setItem('kudoz_user_id', userId);
+            
+            // Начальный баланс
             localStorage.setItem(`kudoz_balance_${userId}`, '400');
-            localStorage.setItem(`kudoz_inventory_${userId}`, JSON.stringify([]));
+            
+            // Количество побед
+            localStorage.setItem('kudoz_wins', '0');
         }
         
         this.userId = userId;
@@ -24,6 +30,8 @@ class KudoZAccount {
         const current = this.getBalance();
         const newBalance = Math.max(0, current + change);
         localStorage.setItem(`kudoz_balance_${this.userId}`, newBalance);
+        
+        // Обновляем на всех страницах
         this.updateBalanceDisplay(newBalance);
         return newBalance;
     }
@@ -34,48 +42,40 @@ class KudoZAccount {
         });
     }
     
-    getInventory() {
-        const inventory = localStorage.getItem(`kudoz_inventory_${this.userId}`);
-        return JSON.parse(inventory || '[]');
+    // Получить количество побед
+    getWins() {
+        return parseInt(localStorage.getItem('kudoz_wins') || '0');
     }
     
-    addToInventory(item) {
-        const inventory = this.getInventory();
-        inventory.push(item);
-        localStorage.setItem(`kudoz_inventory_${this.userId}`, JSON.stringify(inventory));
-        return inventory;
+    // Добавить победу
+    addWin() {
+        let wins = this.getWins();
+        wins++;
+        localStorage.setItem('kudoz_wins', wins);
+        return wins;
     }
 }
 
+// Глобальный аккаунт
 window.kudoZAccount = new KudoZAccount();
 
+// Основной JavaScript файл
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализируем баланс
     const account = window.kudoZAccount;
     account.updateBalanceDisplay(account.getBalance());
     
-    function updateTimer() {
-        const timerElement = document.getElementById('timer');
-        if (timerElement) {
-            const now = new Date();
-            const nextFree = new Date(now);
-            nextFree.setHours(now.getHours() + 1, 0, 0, 0);
-            
-            const diff = nextFree - now;
-            const hours = Math.floor(diff / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            
-            timerElement.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-    }
-    
-    updateTimer();
-    setInterval(updateTimer, 1000);
-    
+    // Функция пополнения (демо)
     window.deposit = function() {
         const account = window.kudoZAccount;
+        const currentBalance = account.getBalance();
         const newBalance = account.updateBalance(100);
+        
         alert(`✅ 100 звёзд добавлено! Новый баланс: ${newBalance} ⭐`);
+    };
+    
+    // Добавляем звуки (опционально)
+    window.playSound = function(sound) {
+        // Можно добавить звуки позже
     };
 });
