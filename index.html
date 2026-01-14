@@ -3,9 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KUDOZ Casino</title>
+    <title>KUDOZ CASINO</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Дополнительные стили для главной */
+        .hero {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 0, 0, 0.1));
+            border-radius: 20px;
+            margin: 20px 0;
+            border: 2px solid #ffd700;
+        }
+        
+        .hero h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            color: #ffd700;
+        }
+        
+        .hero p {
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .featured-game {
+            background: linear-gradient(135deg, #2b2b5e, #3a3a7e);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            border: 3px solid transparent;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .featured-game:hover {
+            transform: translateY(-5px);
+            border-color: #ffd700;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
+        }
+        
+        .game-icon-large {
+            font-size: 60px;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .play-btn {
+            background: linear-gradient(45deg, #ff0000, #ff8800);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .stat-item {
+            background: rgba(40, 40, 80, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .stat-item i {
+            font-size: 32px;
+            color: #00a8ff;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        .daily-bonus {
+            background: linear-gradient(135deg, rgba(0, 210, 211, 0.1), rgba(0, 122, 204, 0.1));
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px solid #00d2d3;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -21,78 +124,65 @@
             </div>
         </header>
 
-        <!-- Меню -->
-        <nav class="menu">
-            <a href="index.html" class="menu-item active">
-                <i class="fas fa-home"></i>
-                <span>Главная</span>
-            </a>
-            <a href="roulette.html" class="menu-item">
+        <!-- Герой секция -->
+        <div class="hero">
+            <h2>🎰 ЭКСКЛЮЗИВНАЯ РУЛЕТКА</h2>
+            <p>Только у нас уникальная чёрно-красная рулетка с повышенными шансами!</p>
+            <div style="font-size: 14px; color: #ffd700; margin-top: 10px;">
+                <i class="fas fa-shield-alt"></i> 100% честная игра
+            </div>
+        </div>
+
+        <!-- Основная игра -->
+        <div class="featured-game" onclick="location.href='roulette.html'">
+            <div class="game-icon-large">
                 <i class="fas fa-dice"></i>
-                <span>Рулетка</span>
-            </a>
-            <a href="cases.html" class="menu-item">
-                <i class="fas fa-gift"></i>
-                <span>Кейсы</span>
-            </a>
-            <a href="#" class="menu-item" onclick="alert('Задания в разработке!')">
-                <i class="fas fa-tasks"></i>
-                <span>Задания</span>
-            </a>
-        </nav>
+            </div>
+            <h2>ЭКСКЛЮЗИВНАЯ РУЛЕТКА</h2>
+            <p>Чёрно-красная рулетка с уникальным дизайном</p>
+            <p style="color: #ffd700; margin: 10px 0;">
+                <i class="fas fa-gem"></i> Повышенные шансы на выигрыш
+            </p>
+            <button class="play-btn">
+                <i class="fas fa-play"></i> ИГРАТЬ СЕЙЧАС
+            </button>
+        </div>
 
-        <!-- Контент -->
-        <main class="main-content">
-            <div class="game-card roulette-card" onclick="location.href='roulette.html'">
-                <div class="game-icon">
-                    <i class="fas fa-dice"></i>
-                </div>
-                <h3>РУЛЕТКА</h3>
-                <p>Исправлено! Баланс сохраняется</p>
-                <div class="free-spin">
-                    <i class="fas fa-clock"></i>
-                    Бесплатно через: <span id="timer">00:59:59</span>
+        <!-- Статистика -->
+        <div class="stats">
+            <div class="stat-item">
+                <i class="fas fa-user"></i>
+                <div>
+                    <div class="stat-value" id="userCode">---</div>
+                    <div class="stat-label">Ваш ID</div>
                 </div>
             </div>
-
-            <div class="game-card cases-card" onclick="location.href='cases.html'">
-                <div class="game-icon">
-                    <i class="fas fa-box-open"></i>
-                </div>
-                <h3>КЕЙСЫ</h3>
-                <p>Telegram-подарки</p>
-                <div class="free-spin">
-                    <i class="fas fa-clock"></i>
-                    Открывай сейчас!
+            <div class="stat-item">
+                <i class="fas fa-trophy"></i>
+                <div>
+                    <div class="stat-value" id="winsCount">0</div>
+                    <div class="stat-label">Побед</div>
                 </div>
             </div>
+        </div>
 
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-user"></i>
-                    <div>
-                        <div class="stat-value" id="userCode">---</div>
-                        <div class="stat-label">Ваш ID</div>
-                    </div>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-gift"></i>
-                    <div>
-                        <div class="stat-value" id="giftCount">0</div>
-                        <div class="stat-label">Подарки</div>
-                    </div>
-                </div>
+        <!-- Ежедневный бонус -->
+        <div class="daily-bonus">
+            <h3><i class="fas fa-gift"></i> ЕЖЕДНЕВНЫЙ БОНУС</h3>
+            <p>Заходи каждый день и получай +10 ⭐ бесплатно!</p>
+            <div id="bonusTimer" style="font-size: 18px; color: #ffd700; margin: 10px 0;">
+                Доступно через: 00:00:00
             </div>
-        </main>
+        </div>
 
         <!-- Нижнее меню -->
         <footer class="footer">
             <div class="footer-text">
                 <i class="fab fa-telegram"></i>
-                @kudoz_bot
+                @kudoz_casino
             </div>
             <button class="deposit-btn" onclick="deposit()">
-                <i class="fas fa-plus"></i> +100 ⭐
+                <i class="fas fa-plus"></i> ПОПОЛНИТЬ
             </button>
         </footer>
     </div>
@@ -100,14 +190,66 @@
     <script src="app.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Показываем ID пользователя
             const userId = localStorage.getItem('kudoz_user_id');
             if (userId) {
                 const shortId = userId.split('_')[1]?.substr(-4) || 'USER';
                 document.getElementById('userCode').textContent = shortId;
             }
             
-            const inventory = JSON.parse(localStorage.getItem(`kudoz_inventory_${userId}`) || '[]');
-            document.getElementById('giftCount').textContent = inventory.length;
+            // Показываем количество побед
+            const wins = localStorage.getItem('kudoz_wins') || '0';
+            document.getElementById('winsCount').textContent = wins;
+            
+            // Таймер ежедневного бонуса
+            function updateBonusTimer() {
+                const timerElement = document.getElementById('bonusTimer');
+                if (!timerElement) return;
+                
+                const lastBonus = localStorage.getItem('last_bonus_date');
+                const now = new Date();
+                
+                if (lastBonus) {
+                    const lastDate = new Date(lastBonus);
+                    const diffHours = (now - lastDate) / (1000 * 60 * 60);
+                    
+                    if (diffHours < 24) {
+                        // Показываем таймер до следующего бонуса
+                        const hoursLeft = 23 - Math.floor(diffHours);
+                        const minutesLeft = 59 - Math.floor((diffHours * 60) % 60);
+                        const secondsLeft = 59 - Math.floor((diffHours * 3600) % 60);
+                        
+                        timerElement.innerHTML = `Доступно через: 
+                            <span style="color:#ffd700">
+                                ${hoursLeft.toString().padStart(2, '0')}:
+                                ${minutesLeft.toString().padStart(2, '0')}:
+                                ${secondsLeft.toString().padStart(2, '0')}
+                            </span>`;
+                    } else {
+                        timerElement.innerHTML = '<span style="color:#00d2d3">🎁 Бонус доступен! Нажми для получения</span>';
+                        timerElement.style.cursor = 'pointer';
+                        timerElement.onclick = claimBonus;
+                    }
+                } else {
+                    timerElement.innerHTML = '<span style="color:#00d2d3">🎁 Бонус доступен! Нажми для получения</span>';
+                    timerElement.style.cursor = 'pointer';
+                    timerElement.onclick = claimBonus;
+                }
+            }
+            
+            function claimBonus() {
+                const account = window.kudoZAccount;
+                const newBalance = account.updateBalance(10);
+                
+                localStorage.setItem('last_bonus_date', new Date().toISOString());
+                
+                alert(`🎉 Вы получили ежедневный бонус: +10 ⭐\nНовый баланс: ${newBalance} ⭐`);
+                
+                updateBonusTimer();
+            }
+            
+            updateBonusTimer();
+            setInterval(updateBonusTimer, 1000);
         });
     </script>
 </body>
