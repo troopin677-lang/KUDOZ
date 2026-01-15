@@ -1,4 +1,4 @@
-// Система аккаунтов и баланса
+// Система аккаунтов и баланса для рулетки подарков
 class KudoZAccount {
     constructor() {
         this.initUser();
@@ -16,6 +16,9 @@ class KudoZAccount {
             
             // Количество побед
             localStorage.setItem('kudoz_wins', '0');
+            
+            // Инвентарь подарков
+            localStorage.setItem(`kudoz_inventory_${userId}`, JSON.stringify([]));
         }
         
         this.userId = userId;
@@ -54,6 +57,20 @@ class KudoZAccount {
         localStorage.setItem('kudoz_wins', wins);
         return wins;
     }
+    
+    // Получить инвентарь
+    getInventory() {
+        const inventory = localStorage.getItem(`kudoz_inventory_${this.userId}`);
+        return JSON.parse(inventory || '[]');
+    }
+    
+    // Добавить в инвентарь
+    addToInventory(item) {
+        const inventory = this.getInventory();
+        inventory.push(item);
+        localStorage.setItem(`kudoz_inventory_${this.userId}`, JSON.stringify(inventory));
+        return inventory;
+    }
 }
 
 // Глобальный аккаунт
@@ -66,16 +83,14 @@ document.addEventListener('DOMContentLoaded', function() {
     account.updateBalanceDisplay(account.getBalance());
     
     // Функция пополнения (демо)
-    window.deposit = function() {
+    window.deposit = function(amount) {
         const account = window.kudoZAccount;
-        const currentBalance = account.getBalance();
-        const newBalance = account.updateBalance(100);
+        const newBalance = account.updateBalance(amount);
         
-        alert(`✅ 100 звёзд добавлено! Новый баланс: ${newBalance} ⭐`);
+        alert(`✅ ${amount} звёзд добавлено!\nНовый баланс: ${newBalance} ⭐`);
     };
     
-    // Добавляем звуки (опционально)
-    window.playSound = function(sound) {
-        // Можно добавить звуки позже
+    window.depositStars = function(amount) {
+        deposit(amount);
     };
 });
