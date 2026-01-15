@@ -3,70 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KUDOZ CASINO</title>
+    <title>KUDOZ - Рулетка Подарков</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Дополнительные стили для главной */
-        .hero {
-            text-align: center;
-            padding: 30px 20px;
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 0, 0, 0.1));
-            border-radius: 20px;
-            margin: 20px 0;
-            border: 2px solid #ffd700;
+        .roulette-selector {
+            padding: 20px;
         }
         
-        .hero h2 {
+        .selector-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .selector-header h2 {
+            color: #ffd700;
             font-size: 28px;
             margin-bottom: 10px;
-            color: #ffd700;
         }
         
-        .hero p {
-            color: #ccc;
-            margin-bottom: 20px;
+        .roulette-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
         
-        .featured-game {
-            background: linear-gradient(135deg, #2b2b5e, #3a3a7e);
+        .roulette-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 0, 0, 0.1));
             border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            margin: 20px 0;
+            padding: 25px;
             border: 3px solid transparent;
-            transition: all 0.3s;
             cursor: pointer;
+            transition: all 0.3s;
         }
         
-        .featured-game:hover {
+        .roulette-card:hover {
             transform: translateY(-5px);
             border-color: #ffd700;
             box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2);
         }
         
-        .game-icon-large {
-            font-size: 60px;
-            color: #ffd700;
-            margin-bottom: 20px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
-        .play-btn {
-            background: linear-gradient(45deg, #ff0000, #ff8800);
+        .card-price {
+            background: linear-gradient(45deg, #ff8c00, #ffd700);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .gift-icon {
+            font-size: 50px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .card-title {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .card-description {
+            color: #ccc;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .prize-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+        
+        .prize-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .prize-item:last-child {
+            border-bottom: none;
+        }
+        
+        .prize-icon {
+            font-size: 20px;
+        }
+        
+        .prize-chance {
+            color: #ffd700;
+        }
+        
+        .select-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #00b09b, #96c93d);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 30px;
-            font-size: 20px;
+            border-radius: 15px;
+            font-size: 18px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 20px;
             transition: all 0.3s;
         }
         
-        .play-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+        .select-btn:hover {
+            transform: scale(1.03);
         }
         
         .stats {
@@ -100,95 +154,239 @@
             color: #aaa;
         }
         
-        .daily-bonus {
-            background: linear-gradient(135deg, rgba(0, 210, 211, 0.1), rgba(0, 122, 204, 0.1));
-            border-radius: 15px;
-            padding: 20px;
-            margin-top: 20px;
+        .deposit-section {
+            background: linear-gradient(135deg, rgba(0, 122, 204, 0.1), rgba(0, 210, 211, 0.1));
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            border: 3px solid #007acc;
             text-align: center;
-            border: 2px solid #00d2d3;
+        }
+        
+        .deposit-btn-large {
+            padding: 18px 40px;
+            background: linear-gradient(45deg, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .deposit-btn-large:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 176, 155, 0.3);
+        }
+        
+        .back-btn {
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Шапка -->
         <header class="header">
-            <div class="logo">
-                <i class="fas fa-crown"></i>
-                <span>KUDOZ CASINO</span>
-            </div>
-            <div class="balance">
+            <a href="index.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="logo">🎁 РУЛЕТКА ПОДАРКОВ</div>
+            <div class="balance-large">
                 <i class="fas fa-star"></i>
                 <span id="balance">400</span> ⭐
             </div>
         </header>
 
-        <!-- Герой секция -->
-        <div class="hero">
-            <h2>🎰 ЭКСКЛЮЗИВНАЯ РУЛЕТКА</h2>
-            <p>Только у нас уникальная чёрно-красная рулетка с повышенными шансами!</p>
-            <div style="font-size: 14px; color: #ffd700; margin-top: 10px;">
-                <i class="fas fa-shield-alt"></i> 100% честная игра
+        <div class="roulette-selector">
+            <div class="selector-header">
+                <h2>ВЫБЕРИ РУЛЕТКУ</h2>
+                <p style="color: #ccc;">Каждая рулетка — свой номинал и призы</p>
             </div>
-        </div>
-
-        <!-- Основная игра -->
-        <div class="featured-game" onclick="location.href='roulette.html'">
-            <div class="game-icon-large">
-                <i class="fas fa-dice"></i>
-            </div>
-            <h2>ЭКСКЛЮЗИВНАЯ РУЛЕТКА</h2>
-            <p>Чёрно-красная рулетка с уникальным дизайном</p>
-            <p style="color: #ffd700; margin: 10px 0;">
-                <i class="fas fa-gem"></i> Повышенные шансы на выигрыш
-            </p>
-            <button class="play-btn">
-                <i class="fas fa-play"></i> ИГРАТЬ СЕЙЧАС
-            </button>
-        </div>
-
-        <!-- Статистика -->
-        <div class="stats">
-            <div class="stat-item">
-                <i class="fas fa-user"></i>
-                <div>
-                    <div class="stat-value" id="userCode">---</div>
-                    <div class="stat-label">Ваш ID</div>
+            
+            <!-- Мишка 15 звёзд -->
+            <div class="roulette-cards">
+                <div class="roulette-card" onclick="selectRoulette(15)">
+                    <div class="card-header">
+                        <div style="color: #ffd700; font-weight: bold;">🎯 ЛЁГКАЯ</div>
+                        <div class="card-price">15 ⭐</div>
+                    </div>
+                    <div class="gift-icon">🧸</div>
+                    <div class="card-title">МИШКА РУЛЕТКА</div>
+                    <div class="card-description">Выиграй мишку за 15 звёзд</div>
+                    
+                    <div class="prize-info">
+                        <div class="prize-item">
+                            <span class="prize-icon">🧸</span>
+                            <span>Мишка (x2)</span>
+                            <span class="prize-chance">10%</span>
+                        </div>
+                        <div class="prize-item">
+                            <span class="prize-icon">🚫</span>
+                            <span>Пропуск</span>
+                            <span class="prize-chance">90%</span>
+                        </div>
+                    </div>
+                    
+                    <button class="select-btn" onclick="selectRoulette(15)">
+                        ВЫБРАТЬ ЭТУ РУЛЕТКУ
+                    </button>
+                </div>
+                
+                <!-- Подарок 25 звёзд -->
+                <div class="roulette-card" onclick="selectRoulette(25)">
+                    <div class="card-header">
+                        <div style="color: #ffd700; font-weight: bold;">🎪 СРЕДНЯЯ</div>
+                        <div class="card-price">25 ⭐</div>
+                    </div>
+                    <div class="gift-icon">🎁</div>
+                    <div class="card-title">ПОДАРОК РУЛЕТКА</div>
+                    <div class="card-description">Выиграй подарок за 25 звёзд</div>
+                    
+                    <div class="prize-info">
+                        <div class="prize-item">
+                            <span class="prize-icon">🎁</span>
+                            <span>Подарок (x2)</span>
+                            <span class="prize-chance">10%</span>
+                        </div>
+                        <div class="prize-item">
+                            <span class="prize-icon">🚫</span>
+                            <span>Пропуск</span>
+                            <span class="prize-chance">90%</span>
+                        </div>
+                    </div>
+                    
+                    <button class="select-btn" onclick="selectRoulette(25)">
+                        ВЫБРАТЬ ЭТУ РУЛЕТКУ
+                    </button>
+                </div>
+                
+                <!-- Ракета 50 звёзд -->
+                <div class="roulette-card" onclick="selectRoulette(50)">
+                    <div class="card-header">
+                        <div style="color: #ffd700; font-weight: bold;">🚀 ПРОФИ</div>
+                        <div class="card-price">50 ⭐</div>
+                    </div>
+                    <div class="gift-icon">🚀</div>
+                    <div class="card-title">РАКЕТА РУЛЕТКА</div>
+                    <div class="card-description">Выиграй ракету за 50 звёзд</div>
+                    
+                    <div class="prize-info">
+                        <div class="prize-item">
+                            <span class="prize-icon">🚀</span>
+                            <span>Ракета (x2)</span>
+                            <span class="prize-chance">10%</span>
+                        </div>
+                        <div class="prize-item">
+                            <span class="prize-icon">🚫</span>
+                            <span>Пропуск</span>
+                            <span class="prize-chance">90%</span>
+                        </div>
+                    </div>
+                    
+                    <button class="select-btn" onclick="selectRoulette(50)">
+                        ВЫБРАТЬ ЭТУ РУЛЕТКУ
+                    </button>
+                </div>
+                
+                <!-- Алмаз 100 звёзд -->
+                <div class="roulette-card" onclick="selectRoulette(100)">
+                    <div class="card-header">
+                        <div style="color: #ffd700; font-weight: bold;">💎 ВИП</div>
+                        <div class="card-price">100 ⭐</div>
+                    </div>
+                    <div class="gift-icon">💎</div>
+                    <div class="card-title">АЛМАЗ РУЛЕТКА</div>
+                    <div class="card-description">Выиграй алмаз за 100 звёзд</div>
+                    
+                    <div class="prize-info">
+                        <div class="prize-item">
+                            <span class="prize-icon">💎</span>
+                            <span>Алмаз (x2)</span>
+                            <span class="prize-chance">10%</span>
+                        </div>
+                        <div class="prize-item">
+                            <span class="prize-icon">🚫</span>
+                            <span>Пропуск</span>
+                            <span class="prize-chance">90%</span>
+                        </div>
+                    </div>
+                    
+                    <button class="select-btn" onclick="selectRoulette(100)">
+                        ВЫБРАТЬ ЭТУ РУЛЕТКУ
+                    </button>
                 </div>
             </div>
-            <div class="stat-item">
-                <i class="fas fa-trophy"></i>
-                <div>
-                    <div class="stat-value" id="winsCount">0</div>
-                    <div class="stat-label">Побед</div>
+            
+            <!-- Статистика -->
+            <div class="stats">
+                <div class="stat-item">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <div class="stat-value" id="userCode">---</div>
+                        <div class="stat-label">Ваш ID</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-trophy"></i>
+                    <div>
+                        <div class="stat-value" id="winsCount">0</div>
+                        <div class="stat-label">Побед</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Пополнение -->
+            <div class="deposit-section">
+                <h3><i class="fas fa-coins"></i> ПОПОЛНЕНИЕ БАЛАНСА</h3>
+                <p style="color: #ccc; margin: 15px 0;">Получи звёзды для игры в рулетку</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0;">
+                    <button class="deposit-btn" onclick="depositStars(100)">
+                        <i class="fas fa-plus"></i> 100 ⭐
+                    </button>
+                    <button class="deposit-btn" onclick="depositStars(500)">
+                        <i class="fas fa-plus"></i> 500 ⭐
+                    </button>
+                    <button class="deposit-btn" onclick="depositStars(1000)">
+                        <i class="fas fa-plus"></i> 1000 ⭐
+                    </button>
+                </div>
+                
+                <div style="color: #ffd700; margin-top: 15px; font-size: 14px;">
+                    <i class="fas fa-info-circle"></i> Звёзды можно получить через Telegram-бота
                 </div>
             </div>
         </div>
-
-        <!-- Ежедневный бонус -->
-        <div class="daily-bonus">
-            <h3><i class="fas fa-gift"></i> ЕЖЕДНЕВНЫЙ БОНУС</h3>
-            <p>Заходи каждый день и получай +10 ⭐ бесплатно!</p>
-            <div id="bonusTimer" style="font-size: 18px; color: #ffd700; margin: 10px 0;">
-                Доступно через: 00:00:00
-            </div>
-        </div>
-
-        <!-- Нижнее меню -->
-        <footer class="footer">
-            <div class="footer-text">
-                <i class="fab fa-telegram"></i>
-                @kudoz_casino
-            </div>
-            <button class="deposit-btn" onclick="deposit()">
-                <i class="fas fa-plus"></i> ПОПОЛНИТЬ
-            </button>
-        </footer>
     </div>
 
     <script src="app.js"></script>
     <script>
+        function selectRoulette(price) {
+            // Сохраняем выбранную рулетку
+            localStorage.setItem('selected_roulette', price);
+            
+            // Переходим на страницу рулетки
+            window.location.href = `roulette.html?price=${price}`;
+        }
+        
+        function depositStars(amount) {
+            const account = window.kudoZAccount;
+            const newBalance = account.updateBalance(amount);
+            
+            alert(`✅ ${amount} звёзд добавлено!\nНовый баланс: ${newBalance} ⭐`);
+            
+            // Здесь будет интеграция с оплатой
+            // Пока что просто добавляем звёзды
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Показываем ID пользователя
             const userId = localStorage.getItem('kudoz_user_id');
@@ -200,56 +398,6 @@
             // Показываем количество побед
             const wins = localStorage.getItem('kudoz_wins') || '0';
             document.getElementById('winsCount').textContent = wins;
-            
-            // Таймер ежедневного бонуса
-            function updateBonusTimer() {
-                const timerElement = document.getElementById('bonusTimer');
-                if (!timerElement) return;
-                
-                const lastBonus = localStorage.getItem('last_bonus_date');
-                const now = new Date();
-                
-                if (lastBonus) {
-                    const lastDate = new Date(lastBonus);
-                    const diffHours = (now - lastDate) / (1000 * 60 * 60);
-                    
-                    if (diffHours < 24) {
-                        // Показываем таймер до следующего бонуса
-                        const hoursLeft = 23 - Math.floor(diffHours);
-                        const minutesLeft = 59 - Math.floor((diffHours * 60) % 60);
-                        const secondsLeft = 59 - Math.floor((diffHours * 3600) % 60);
-                        
-                        timerElement.innerHTML = `Доступно через: 
-                            <span style="color:#ffd700">
-                                ${hoursLeft.toString().padStart(2, '0')}:
-                                ${minutesLeft.toString().padStart(2, '0')}:
-                                ${secondsLeft.toString().padStart(2, '0')}
-                            </span>`;
-                    } else {
-                        timerElement.innerHTML = '<span style="color:#00d2d3">🎁 Бонус доступен! Нажми для получения</span>';
-                        timerElement.style.cursor = 'pointer';
-                        timerElement.onclick = claimBonus;
-                    }
-                } else {
-                    timerElement.innerHTML = '<span style="color:#00d2d3">🎁 Бонус доступен! Нажми для получения</span>';
-                    timerElement.style.cursor = 'pointer';
-                    timerElement.onclick = claimBonus;
-                }
-            }
-            
-            function claimBonus() {
-                const account = window.kudoZAccount;
-                const newBalance = account.updateBalance(10);
-                
-                localStorage.setItem('last_bonus_date', new Date().toISOString());
-                
-                alert(`🎉 Вы получили ежедневный бонус: +10 ⭐\nНовый баланс: ${newBalance} ⭐`);
-                
-                updateBonusTimer();
-            }
-            
-            updateBonusTimer();
-            setInterval(updateBonusTimer, 1000);
         });
     </script>
 </body>
