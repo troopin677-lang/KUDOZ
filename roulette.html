@@ -539,4 +539,15 @@
                 spinBtn.innerHTML = '<i class="fas fa-play"></i> КРУТИТЬ РУЛЕТКУ';
                 
                 // Обновляем рулетку для следующего вращения
-                setTimeout(
+                setTimeout(createRouletteWheel, 1000);
+                
+            }, 4000);
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            createRouletteWheel();
+        });
+    </script>
+</body>
+</html>
